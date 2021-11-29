@@ -4,6 +4,7 @@
 
     const CONFIG = {
         URL: "/Home/GetData",
+        method: 'POST',
         concurrentRequestNumberID: 'concurrentRequestNumber',
         defaultConcurrentNumber: 5,
         class: {
@@ -15,11 +16,11 @@
     };
 
     async function sendNormal(control) {
-        await sendCommmon(control, fetch);
+        await sendCommmon(control, fetchWithData);
     }
 
     async function sendConcurrent(control) {
-        await sendCommmon(control, sendMultipleRequest);
+        await sendCommmon(control, sendMultiple);
     }
 
     async function sendCommmon(control, getResponseFunc) {
@@ -41,13 +42,13 @@
         }
     }
 
-    function sendMultipleRequest(url) {
+    function sendMultiple(url) {
         let concurrentRequestNumber = document.getElementById(CONFIG.concurrentRequestNumberID)?.value * 1 ?? CONFIG.defaultConcurrentNumber;
 
         let requestPromises = [];
 
         for (let i = 0; i < concurrentRequestNumber; i++) {
-            requestPromises.push(fetch(url));
+            requestPromises.push(fetchWithData(url));
         }
 
         return Promise.all(requestPromises);
@@ -65,6 +66,18 @@
     function onError(control) {
         control.classList.add(CONFIG.class.error);
         control.removeAttribute(CONFIG.attr.disabled);
+    }
+
+    function fetchWithData(url) {
+
+        return fetch(url, {
+            method: CONFIG.method,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "Data": "Data" })
+        })
     }
 
     return {

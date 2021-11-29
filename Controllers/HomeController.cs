@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using WOTCH.Interfaces;
+using WOTCH.Lib;
 using WOTCH.Models;
 
 namespace WOTCH.Controllers
@@ -12,10 +14,12 @@ namespace WOTCH.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IRequestHandler _requestHandler;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IRequestHandler requestHandler)
         {
             _logger = logger;
+            _requestHandler = requestHandler;
         }
 
         public IActionResult Index()
@@ -23,8 +27,10 @@ namespace WOTCH.Controllers
             return View();
         }
 
-        public IActionResult GetData()
+        [HttpPost]
+        public IActionResult GetData([FromBody]object data)
         {
+            _requestHandler.Proceed(data);
             return StatusCode(200);
         }
 
