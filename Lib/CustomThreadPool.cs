@@ -17,10 +17,11 @@ namespace WOTCH.Lib
                     try
                     {
                         operation(o);
-                    }
-                    finally
-                    {
                         OnOperationCompleted?.Invoke(true);
+                    }
+                    catch
+                    {
+                        OnOperationCompleted?.Invoke(false);
                     }
                 }, state);
 

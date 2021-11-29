@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
+﻿using System.Collections.Concurrent;
 using WOTCH.Interfaces;
 
 namespace WOTCH.Lib
@@ -8,7 +6,7 @@ namespace WOTCH.Lib
     public class RequestHandler : IRequestHandler
     {
         private static readonly ConcurrentQueue<object> requestQueue = new();
-        private static int restConcurrentCalls = DataProcessor.MaxConcurrentCalls;
+        private static int restConcurrentCalls = DataProcessor.DataProcessor.MaxConcurrentCalls;
         private static readonly object processLock = new();
         private static readonly object operationCompleteLock = new();
 
@@ -34,11 +32,14 @@ namespace WOTCH.Lib
                 }
             }
 
-            CustomThreadPool.QueueUserWorkItem(state => DataProcessor.ProcessData(data), null);
+            CustomThreadPool.QueueUserWorkItem(state => DataProcessor.DataProcessor.ProcessData(data), null);
         }
 
         private void CustomThreadPool_OnOperationCompleted(bool isSuccess)
         {
+            if(!isSuccess)
+                System.Diagnostics.Debug.WriteLine($"failed");
+
             lock (operationCompleteLock)
             {
                 restConcurrentCalls++;
@@ -49,18 +50,18 @@ namespace WOTCH.Lib
             }
 
             if (requestQueue.TryDequeue(out object data))
-                CustomThreadPool.QueueUserWorkItem(state => DataProcessor.ProcessData(data), null);
+                CustomThreadPool.QueueUserWorkItem(state => DataProcessor.DataProcessor.ProcessData(data), null);
         }
     }
 
 
-    public static class DataProcessor
-    {
-        public static void ProcessData(object data)
-        {
-            Thread.Sleep(new Random().Next(100, 10000));
-        }
+    //public static class DataProcessor
+    //{
+    //    public static void ProcessData(object data)
+    //    {
+    //        Thread.Sleep(new Random().Next(100, 10000));
+    //    }
 
-        public static int MaxConcurrentCalls { get => 5; }
-    }
+    //    public static int MaxConcurrentCalls { get => 5; }
+    //}
 }
