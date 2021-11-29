@@ -24,7 +24,9 @@ namespace WOTCH.Lib
             lock (processLock)
             {
                 restConcurrentCalls--;
-                System.Diagnostics.Debug.WriteLine($"start {restConcurrentCalls}");
+
+                System.Diagnostics.Debug.WriteLine($"started {restConcurrentCalls}");
+
                 if (restConcurrentCalls < 0)
                 {
                     requestQueue.Enqueue(data);
@@ -40,7 +42,9 @@ namespace WOTCH.Lib
             lock (operationCompleteLock)
             {
                 restConcurrentCalls++;
-                System.Diagnostics.Debug.WriteLine($"complete {restConcurrentCalls}");
+
+                System.Diagnostics.Debug.WriteLine($"completed {restConcurrentCalls}");
+
                 if (requestQueue.IsEmpty) return;
             }
 
@@ -54,7 +58,7 @@ namespace WOTCH.Lib
     {
         public static void ProcessData(object data)
         {
-            Thread.Sleep(new Random().Next(100, 1000));
+            Thread.Sleep(new Random().Next(100, 10000));
         }
 
         public static int MaxConcurrentCalls { get => 5; }
