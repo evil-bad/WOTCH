@@ -28,7 +28,7 @@ namespace WOTCH.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetData([FromBody]object data)
+        public IActionResult SendData([FromBody]object data)
         {
             _requestHandler.Proceed(data);
             return StatusCode(200);

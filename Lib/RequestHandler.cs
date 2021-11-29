@@ -23,7 +23,7 @@ namespace WOTCH.Lib
             {
                 restConcurrentCalls--;
 
-                System.Diagnostics.Debug.WriteLine($"started {restConcurrentCalls}");
+                System.Diagnostics.Debug.WriteLine($"Started. Rest calls: {restConcurrentCalls}");
 
                 if (restConcurrentCalls < 0)
                 {
@@ -38,13 +38,13 @@ namespace WOTCH.Lib
         private void CustomThreadPool_OnOperationCompleted(bool isSuccess)
         {
             if(!isSuccess)
-                System.Diagnostics.Debug.WriteLine($"failed");
+                System.Diagnostics.Debug.WriteLine($"Failed");
 
             lock (operationCompleteLock)
             {
                 restConcurrentCalls++;
 
-                System.Diagnostics.Debug.WriteLine($"completed {restConcurrentCalls}");
+                System.Diagnostics.Debug.WriteLine($"Completed. Rest calls: {restConcurrentCalls}");
 
                 if (requestQueue.IsEmpty) return;
             }

@@ -3,7 +3,7 @@
 ;const REQUEST = (function () {
 
     const CONFIG = {
-        URL: "/Home/GetData",
+        URL: "/Home/SendData",
         method: 'POST',
         concurrentRequestNumberID: 'concurrentRequestNumber',
         defaultConcurrentNumber: 5,
